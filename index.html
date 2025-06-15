@@ -1,0 +1,171 @@
+File: index.html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>gu3nyours</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>GU3NY0URS.CO</h1>
+    <nav>
+      <a href="#produk">Produk</a>
+      <a href="#kontak">Kontak</a>
+      <a href="#keranjang">Keranjang</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="produk">
+      <h2>Daftar Produk</h2>
+      <div class="produk-container">
+        <div class="produk">
+          <img src="d:\Downloads\hd.jpg" alt="HOODIE">
+          <h3> HOODIE</h3>
+          <p>Rp800.000</p>
+          <button onclick="tambahKeKeranjang('HOODIE', 800000)">Tambah ke Keranjang</button>
+        </div>
+        <div class="produk">
+          <img src="d:\Downloads\mrcl.jpg" alt="BAJU">
+          <h3>BAJU</h3>
+          <p>Rp280.000</p>
+          <button onclick="tambahKeKeranjang('BAJU', 280000)">Tambah ke Keranjang</button>
+        </div>
+        <div class="produk">
+          <img src="d:\Downloads\kalung.jpg" alt="aksesoriss">
+          <h3>aksesoriss</h3>
+          <p>Rp180.000</p>
+          <button onclick="tambahKeKeranjang('aksesoriss', 280000)">Tambah ke Keranjang</button>
+        </div>
+        <div class="produk">
+          <img src="d:\Downloads\tp.webp" alt="caps">
+          <h3>caps</h3>
+          <p>Rp470.000</p>
+          <button onclick="tambahKeKeranjang('aksesoriss', 150000)">Tambah ke Keranjang</button>
+        </div>
+        <div class="produk">
+          <img src="d:\Downloads\zpp.jpg" alt="ZIPPER Y2K">
+          <h3>ZIPPER Y2K</h3>
+          <p>Rp890.000</p>
+          <button onclick="tambahKeKeranjang('aksesoriss', 150000)">Tambah ke Keranjang</button>
+        </div>
+         <div class="produk">
+          <img src="d:\Downloads\cln.jpg" alt="pants">
+          <h3>pants</h3>
+          <p>Rp830.000</p>
+          <button onclick="tambahKeKeranjang('aksesoriss', 150000)">Tambah ke Keranjang</button>
+        </div>
+    <section id="keranjang">
+      <h2>Keranjang Belanja</h2>
+      <div id="daftar-keranjang"></div>
+      <button onclick="hapusKeranjang()">Hapus Semua</button>
+
+      <h3>Checkout</h3>
+      <form onsubmit="prosesCheckout(event)">
+        <input type="text" id="nama" placeholder="Nama Lengkap" required><br>
+        <input type="text" id="alamat" placeholder="Alamat Pengiriman" required><br>
+        <button type="submit">Kirim Pesanan</button>
+      </form>
+    </section>
+
+    <section id="kontak">
+      <h2>Kontak Kami</h2>
+      <p>Email: GU3NY0URS_.COM</p>
+      <p>WhatsApp: 0889567688</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Toko Sederhana. Semua hak dilindungi.</p>
+  </footer>
+
+  <script>
+    let keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
+
+    function tambahKeKeranjang(nama, harga) {
+      keranjang.push({ nama, harga });
+      localStorage.setItem('keranjang', JSON.stringify(keranjang));
+      alert(nama + " ditambahkan ke keranjang.");
+      tampilkanKeranjang();
+    }
+
+    function tampilkanKeranjang() {
+      const container = document.getElementById("daftar-keranjang");
+      container.innerHTML = "";
+
+      if (keranjang.length === 0) {
+        container.innerHTML = "<p>Keranjang kosong.</p>";
+        return;
+      }
+
+      const list = document.createElement("ul");
+      let total = 0;
+
+      keranjang.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = `${item.nama} - Rp${item.harga.toLocaleString()}`;
+        list.appendChild(li);
+        total += item.harga;
+      });
+
+      const totalElem = document.createElement("p");
+      totalElem.innerHTML = `<strong>Total: Rp${total.toLocaleString()}</strong>`;
+
+      container.appendChild(list);
+      container.appendChild(totalElem);
+    }
+
+    function hapusKeranjang() {
+      keranjang = [];
+      localStorage.removeItem('keranjang');
+      tampilkanKeranjang();
+      alert("Keranjang telah dikosongkan.");
+    }
+
+    function prosesCheckout(event) {
+      event.preventDefault();
+      const nama = document.getElementById("nama").value;
+      const alamat = document.getElementById("alamat").value;
+
+      if (keranjang.length === 0) {
+        alert("Keranjang masih kosong.");
+        return;
+      }
+
+      alert(`Terima kasih ${nama}, pesanan Anda akan dikirim ke ${alamat}.`);
+      hapusKeranjang();
+      document.getElementById("nama").value = "";
+      document.getElementById("alamat").value = "";
+    }
+
+    function hubungiKami() {
+      window.open('https://wa.me/6281234567890?text=Halo%20saya%20ingin%20bertanya%20tentang%20produk%20Anda', '_blank');
+    }
+
+    function scrollToSection(id) {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Tambah efek animasi saat scroll
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('main section').forEach(section => {
+      observer.observe(section);
+    });
+
+    tampilkanKeranjang();
+  </script>
+</body>
+</html>
+
